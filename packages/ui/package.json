@@ -1,0 +1,12 @@
+{
+  "name": "@quizpulse/ui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@quizpulse/realtime-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.2",
+    "@quizpulse/shared": "1.0.0",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.1",
+    "socket.io": "^4.8.1",
+    "@quizpulse/db": "1.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

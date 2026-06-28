@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: vk-quiz-realtime
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run db:generate && npm run build -w @quizpulse/realtime-server
+    startCommand: npm run start -w @quizpulse/realtime-server
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false

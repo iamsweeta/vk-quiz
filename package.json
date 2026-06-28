@@ -1,0 +1,37 @@
+{
+  "name": "vk-quiz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VK Quiz: production-ready realtime quiz platform with Next.js, Socket.IO, Prisma and PostgreSQL.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,realtime -c blue,magenta \"npm run dev -w @quizpulse/web\" \"npm run dev -w @quizpulse/realtime-server\"",
+    "dev:web": "npm run dev -w @quizpulse/web",
+    "dev:realtime": "npm run dev -w @quizpulse/realtime-server",
+    "build": "npm run build -w @quizpulse/web && npm run build -w @quizpulse/realtime-server",
+    "db:generate": "prisma generate --schema packages/db/prisma/schema.prisma",
+    "db:migrate": "prisma migrate dev --name init --schema packages/db/prisma/schema.prisma",
+    "db:push": "prisma db push --schema packages/db/prisma/schema.prisma",
+    "db:seed": "tsx packages/db/prisma/seed.ts",
+    "db:studio": "prisma studio --schema packages/db/prisma/schema.prisma",
+    "lint": "npm run lint -w @quizpulse/web",
+    "db:migrate:deploy": "prisma migrate deploy --schema packages/db/prisma/schema.prisma",
+    "db:push:prod": "prisma db push --schema packages/db/prisma/schema.prisma",
+    "build:web": "npm run db:generate && npm run build -w @quizpulse/web",
+    "build:realtime": "npm run db:generate && npm run build -w @quizpulse/realtime-server",
+    "start:realtime": "npm run start -w @quizpulse/realtime-server"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "concurrently": "^9.1.0",
+    "prisma": "^6.19.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3"
+  }
+}

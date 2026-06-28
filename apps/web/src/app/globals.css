@@ -1,0 +1,474 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f6f8ff;
+  --foreground: #0f172a;
+  --muted: #64748b;
+  --card: rgba(255, 255, 255, 0.86);
+  --card-strong: rgba(255, 255, 255, 0.98);
+  --glass: rgba(255, 255, 255, 0.76);
+  --glass-hover: rgba(255, 255, 255, 0.94);
+  --header: rgba(248, 250, 252, 0.74);
+  --border: rgba(15, 23, 42, 0.11);
+  --input: rgba(255, 255, 255, 0.78);
+  --top-glow: rgba(34, 211, 238, 0.10);
+  --grid-line: rgba(15, 23, 42, 0.032);
+  --danger: #ef4444;
+  --danger-soft: rgba(239, 68, 68, 0.1);
+  --logo-start: #7C3AED;
+  --logo-end: #06B6D4;
+  --accent: #0891b2;
+  --accent-strong: #0e7490;
+  --accent-2: #7c3aed;
+  --accent-soft: rgba(34, 211, 238, 0.12);
+  --accent-border: rgba(34, 211, 238, 0.30);
+  --button-gradient: linear-gradient(135deg, #22d3ee, #7c3aed);
+  --shadow-soft: 0 18px 55px rgba(15, 23, 42, 0.09);
+  --badge-bg: rgba(34, 211, 238, 0.11);
+  --badge-border: rgba(34, 211, 238, 0.30);
+  --badge-text: #087f95;
+  --chip-bg: rgba(255, 255, 255, 0.72);
+  --chip-text: #334155;
+}
+
+.dark {
+  --background: #080a12;
+  --foreground: #f8fafc;
+  --muted: #94a3b8;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-strong: rgba(255, 255, 255, 0.11);
+  --glass: rgba(255, 255, 255, 0.055);
+  --glass-hover: rgba(255, 255, 255, 0.1);
+  --header: rgba(8, 10, 18, 0.68);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(2, 6, 23, 0.42);
+  --top-glow: rgba(124, 58, 237, 0.22);
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --danger: #fb7185;
+  --danger-soft: rgba(251, 113, 133, 0.12);
+  --logo-start: #7C3AED;
+  --logo-end: #06B6D4;
+  --accent: #22d3ee;
+  --accent-strong: #67e8f9;
+  --accent-2: #8b5cf6;
+  --accent-soft: rgba(34, 211, 238, 0.10);
+  --accent-border: rgba(34, 211, 238, 0.25);
+  --button-gradient: linear-gradient(135deg, #22d3ee, #7c3aed);
+  --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.30);
+  --badge-bg: rgba(34, 211, 238, 0.10);
+  --badge-border: rgba(34, 211, 238, 0.25);
+  --badge-text: #22d3ee;
+  --chip-bg: rgba(255, 255, 255, 0.055);
+  --chip-text: #cbd5e1;
+}
+
+.pink {
+  --background: #ffeaf4;
+  --foreground: #831843;
+  --muted: #be185d;
+  --card: rgba(255, 241, 248, 0.88);
+  --card-strong: rgba(255, 246, 251, 0.98);
+  --glass: rgba(255, 229, 242, 0.72);
+  --glass-hover: rgba(255, 216, 235, 0.92);
+  --header: rgba(255, 234, 244, 0.78);
+  --border: rgba(219, 39, 119, 0.20);
+  --input: rgba(255, 245, 250, 0.88);
+  --top-glow: rgba(236, 72, 153, 0.24);
+  --grid-line: rgba(219, 39, 119, 0.055);
+  --danger: #be123c;
+  --danger-soft: rgba(244, 63, 94, 0.12);
+  --logo-start: #ec4899;
+  --logo-end: #be185d;
+  --accent: #ec4899;
+  --accent-strong: #be185d;
+  --accent-2: #f472b6;
+  --accent-soft: rgba(236, 72, 153, 0.17);
+  --accent-border: rgba(236, 72, 153, 0.38);
+  --button-gradient: linear-gradient(135deg, #f9a8d4, #ec4899 48%, #be185d);
+  --shadow-soft: 0 18px 55px rgba(190, 24, 93, 0.13);
+  --badge-bg: rgba(236, 72, 153, 0.15);
+  --badge-border: rgba(236, 72, 153, 0.34);
+  --badge-text: #be185d;
+  --chip-bg: rgba(255, 241, 248, 0.82);
+  --chip-text: #9d174d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--background);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(124, 58, 237, 0.075), transparent 34rem),
+    radial-gradient(circle at top right, rgba(34, 211, 238, 0.06), transparent 32rem),
+    linear-gradient(180deg, var(--background), var(--background));
+  color: var(--foreground);
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.32);
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.orb {
+  pointer-events: none;
+  position: absolute;
+  height: 28rem;
+  width: 28rem;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.20;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 55%, var(--accent-strong) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.noise-overlay::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image: radial-gradient(circle at 1px 1px, var(--foreground) 1px, transparent 0);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+
+/* Theme-aware accent normalization. Many UI pieces use Tailwind utility classes;
+   these overrides keep the pink theme truly pink without touching every JSX file. */
+.pink body {
+  background:
+    radial-gradient(circle at top left, rgba(244, 114, 182, 0.14), transparent 34rem),
+    radial-gradient(circle at top right, rgba(236, 72, 153, 0.10), transparent 32rem),
+    linear-gradient(180deg, var(--background), var(--background));
+}
+
+.pink ::selection {
+  background: rgba(236, 72, 153, 0.24);
+}
+
+.pink .text-cyan,
+.pink .dark\:text-cyan,
+.pink .text-primary {
+  color: var(--accent) !important;
+}
+
+.pink .bg-cyan\/10,
+.pink .bg-cyan\/15,
+.pink .bg-primary\/10,
+.pink .bg-primary\/15,
+.pink .bg-primary\/20,
+.pink .bg-cyan\/20,
+.pink .bg-cyan\/30 {
+  background-color: var(--accent-soft) !important;
+}
+
+.pink .border-cyan,
+.pink .border-cyan\/20,
+.pink .border-cyan\/25,
+.pink .border-cyan\/30,
+.pink .border-cyan\/35,
+.pink .focus\:border-cyan:focus {
+  border-color: var(--accent-border) !important;
+}
+
+.pink .ring-cyan\/10,
+.pink .focus\:ring-cyan\/10:focus {
+  --tw-ring-color: rgba(236, 72, 153, 0.16) !important;
+}
+
+.pink .shadow-glow {
+  box-shadow: 0 18px 55px rgba(236, 72, 153, 0.20) !important;
+}
+
+.pink .from-primary,
+.pink .from-cyan,
+.pink .to-cyan,
+.pink .to-primary,
+.pink .to-pink,
+.pink .from-pink {
+  --tw-gradient-from: #f9a8d4 var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(249 168 212 / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+.pink .to-cyan,
+.pink .to-primary,
+.pink .to-pink {
+  --tw-gradient-to: #be185d var(--tw-gradient-to-position) !important;
+}
+
+.pink input::file-selector-button {
+  background-color: var(--accent-soft) !important;
+  color: var(--accent) !important;
+}
+
+
+/* Full pink theme pass: all semantic accents become pink, including success/warning states. */
+.pink body {
+  background:
+    radial-gradient(circle at top left, rgba(244, 114, 182, 0.24), transparent 32rem),
+    radial-gradient(circle at top right, rgba(236, 72, 153, 0.18), transparent 34rem),
+    radial-gradient(circle at 50% 120%, rgba(251, 207, 232, 0.45), transparent 38rem),
+    linear-gradient(180deg, #ffeaf4, #fff5fa 55%, #ffe6f2);
+}
+
+.pink .orb {
+  background: rgba(236, 72, 153, 0.22) !important;
+}
+
+.pink .text-cyan,
+.pink .text-primary,
+.pink .text-success,
+.pink .text-warning,
+.pink [class*="text-cyan"],
+.pink [class*="text-primary"],
+.pink [class*="text-success"],
+.pink [class*="text-warning"] {
+  color: var(--accent) !important;
+}
+
+.pink [class*="bg-cyan"],
+.pink [class*="bg-primary"],
+.pink [class*="bg-success"],
+.pink [class*="bg-warning"] {
+  background-color: var(--accent-soft) !important;
+}
+
+.pink [class*="border-cyan"],
+.pink [class*="border-primary"],
+.pink [class*="border-success"],
+.pink [class*="border-warning"] {
+  border-color: var(--accent-border) !important;
+}
+
+.pink [class*="from-primary"],
+.pink [class*="from-cyan"],
+.pink [class*="from-success"],
+.pink [class*="from-warning"] {
+  --tw-gradient-from: #f9a8d4 var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(249 168 212 / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+.pink [class*="to-primary"],
+.pink [class*="to-cyan"],
+.pink [class*="to-success"],
+.pink [class*="to-warning"] {
+  --tw-gradient-to: #be185d var(--tw-gradient-to-position) !important;
+}
+
+.pink a:hover,
+.pink button:hover {
+  color: var(--accent-strong);
+}
+
+.pink input,
+.pink textarea,
+.pink select {
+  color: var(--foreground) !important;
+  caret-color: var(--accent) !important;
+}
+
+.pink input:focus,
+.pink textarea:focus,
+.pink select:focus {
+  border-color: var(--accent-border) !important;
+  box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.12) !important;
+}
+
+.pink-heart-field {
+  display: none;
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.pink .pink-heart-field {
+  display: block;
+}
+
+.pink-heart {
+  position: absolute;
+  bottom: -3rem;
+  left: var(--heart-left, 50%);
+  width: var(--heart-size, 1.1rem);
+  height: var(--heart-size, 1.1rem);
+  transform: rotate(45deg);
+  border-radius: 0.25rem;
+  background: rgba(236, 72, 153, 0.18);
+  animation: float-heart var(--heart-duration, 16s) linear infinite;
+  animation-delay: var(--heart-delay, 0s);
+  filter: blur(var(--heart-blur, 0px));
+}
+
+.pink-heart::before,
+.pink-heart::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: inherit;
+}
+
+.pink-heart::before { left: -50%; }
+.pink-heart::after { top: -50%; }
+
+.pink-heart:nth-child(1) { --heart-left: 4%; --heart-size: 0.75rem; --heart-duration: 17s; --heart-delay: -2s; }
+.pink-heart:nth-child(2) { --heart-left: 11%; --heart-size: 1.1rem; --heart-duration: 22s; --heart-delay: -11s; }
+.pink-heart:nth-child(3) { --heart-left: 17%; --heart-size: 0.9rem; --heart-duration: 18s; --heart-delay: -7s; }
+.pink-heart:nth-child(4) { --heart-left: 25%; --heart-size: 1.35rem; --heart-duration: 24s; --heart-delay: -13s; }
+.pink-heart:nth-child(5) { --heart-left: 31%; --heart-size: 0.7rem; --heart-duration: 19s; --heart-delay: -4s; }
+.pink-heart:nth-child(6) { --heart-left: 38%; --heart-size: 1rem; --heart-duration: 21s; --heart-delay: -9s; }
+.pink-heart:nth-child(7) { --heart-left: 46%; --heart-size: 1.45rem; --heart-duration: 26s; --heart-delay: -16s; --heart-blur: 1px; }
+.pink-heart:nth-child(8) { --heart-left: 53%; --heart-size: 0.85rem; --heart-duration: 17s; --heart-delay: -3s; }
+.pink-heart:nth-child(9) { --heart-left: 59%; --heart-size: 1.1rem; --heart-duration: 23s; --heart-delay: -12s; }
+.pink-heart:nth-child(10) { --heart-left: 66%; --heart-size: 0.7rem; --heart-duration: 20s; --heart-delay: -5s; }
+.pink-heart:nth-child(11) { --heart-left: 72%; --heart-size: 1.25rem; --heart-duration: 25s; --heart-delay: -14s; }
+.pink-heart:nth-child(12) { --heart-left: 79%; --heart-size: 0.95rem; --heart-duration: 18s; --heart-delay: -8s; }
+.pink-heart:nth-child(13) { --heart-left: 84%; --heart-size: 1.45rem; --heart-duration: 27s; --heart-delay: -20s; --heart-blur: 1px; }
+.pink-heart:nth-child(14) { --heart-left: 91%; --heart-size: 0.85rem; --heart-duration: 19s; --heart-delay: -6s; }
+.pink-heart:nth-child(15) { --heart-left: 97%; --heart-size: 1.15rem; --heart-duration: 24s; --heart-delay: -15s; }
+.pink-heart:nth-child(16) { --heart-left: 43%; --heart-size: 0.6rem; --heart-duration: 16s; --heart-delay: -10s; }
+.pink-heart:nth-child(17) { --heart-left: 7%; --heart-size: 1.35rem; --heart-duration: 29s; --heart-delay: -18s; --heart-blur: 1px; }
+.pink-heart:nth-child(18) { --heart-left: 87%; --heart-size: 0.65rem; --heart-duration: 16s; --heart-delay: -1s; }
+
+@keyframes float-heart {
+  0% { transform: translate3d(0, 0, 0) rotate(45deg) scale(0.8); opacity: 0; }
+  10% { opacity: 0.75; }
+  50% { transform: translate3d(1.4rem, -52vh, 0) rotate(65deg) scale(1); opacity: 0.35; }
+  90% { opacity: 0.12; }
+  100% { transform: translate3d(-1.6rem, -110vh, 0) rotate(20deg) scale(1.25); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pink-heart { animation: none; opacity: 0.16; }
+}
+
+@media (max-width: 420px) {
+  .pink-heart-field { opacity: 0.55; }
+}
+
+/* Keep text readable on pink primary buttons during hover. */
+.pink .qp-primary-button,
+.pink .qp-primary-button:hover,
+.pink a.qp-primary-button:hover,
+.pink button.qp-primary-button:hover {
+  color: #ffffff !important;
+}
+
+@media (max-width: 640px) {
+  .pink-heart-field { opacity: 0.45; }
+}
+
+/* Mobile-first navigation and typography polish */
+.mobile-tabbar {
+  position: fixed;
+  left: max(0.75rem, env(safe-area-inset-left));
+  right: max(0.75rem, env(safe-area-inset-right));
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  z-index: 50;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0.35rem;
+  padding: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 1.45rem;
+  background: color-mix(in srgb, var(--header) 92%, transparent);
+  backdrop-filter: blur(22px);
+  box-shadow: var(--shadow-soft);
+}
+
+.mobile-tabbar__item {
+  min-width: 0;
+  min-height: 3.15rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.22rem;
+  border-radius: 1.05rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.mobile-tabbar__item svg {
+  flex: none;
+}
+
+.mobile-tabbar__item--active {
+  background: var(--card-strong);
+  color: var(--foreground);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-tabbar__item:active {
+  transform: scale(0.98);
+}
+
+.pink .mobile-tabbar__item--active {
+  background: rgba(252, 231, 243, 0.96);
+  color: var(--accent-strong);
+}
+
+@media (max-width: 640px) {
+  h1 {
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-card-safe {
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-tabbar {
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+  }
+
+  .mobile-tabbar__item {
+    min-height: 2.9rem;
+    font-size: 0.64rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .text-7xl { font-size: 2.65rem !important; line-height: 1.02 !important; }
+  .text-6xl { font-size: 2.45rem !important; line-height: 1.05 !important; }
+  .text-5xl { font-size: 2.1rem !important; line-height: 1.08 !important; }
+  .text-4xl { font-size: 1.75rem !important; line-height: 1.12 !important; }
+  .text-3xl { font-size: 1.45rem !important; line-height: 1.18 !important; }
+  .text-2xl { font-size: 1.25rem !important; line-height: 1.25 !important; }
+  section.mx-auto { padding-top: 1.4rem !important; padding-bottom: 1.8rem !important; }
+}
