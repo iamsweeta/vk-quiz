@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "next lint",
-    "build:web": "next build"
+    "build:web": "cd ../.. && npm run db:generate && npm run build -w @quizpulse/web"
   },
   "dependencies": {
     "@quizpulse/db": "1.0.0",
