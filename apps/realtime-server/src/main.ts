@@ -271,7 +271,8 @@ io.on('connection', (socket) => {
       title: room.quiz.title,
       totalQuestions: room.quiz.questions.length
     });
-    emitState(room);
+
+    startQuestion(room, 0);
   });
 
   socket.on(socketEvents.hostShowQuestion, async (rawPayload: { code?: string; index?: number }) => {
