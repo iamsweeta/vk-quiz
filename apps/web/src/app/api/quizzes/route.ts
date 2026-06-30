@@ -50,7 +50,7 @@ export async function POST(request: Request) {
         ownerId: user.id,
         categoryId: category.id,
         questions: {
-          create: payload.questions.map((question) => ({
+          create: payload.questions.map((question: any) => ({
             text: question.text,
             imageUrl: question.imageUrl || null,
             type: question.type,

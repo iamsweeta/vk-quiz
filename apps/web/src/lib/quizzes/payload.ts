@@ -66,8 +66,8 @@ export function validateQuizPayload(payload: ReturnType<typeof normalizeQuizPayl
     return 'Для приватного квиза нужен код доступа минимум из 4 символов.';
   }
   if (payload.questions.length === 0) return 'Добавьте хотя бы один вопрос.';
-  if (payload.questions.some((question) => question.text.length < 3 && !question.imageUrl)) return 'У каждого вопроса должен быть текст или изображение.';
-  if (payload.questions.some((question) => question.options.length < 2)) return 'У каждого вопроса должно быть минимум 2 варианта ответа.';
-  if (payload.questions.some((question) => !question.options.some((option) => option.isCorrect))) return 'У каждого вопроса должен быть хотя бы один правильный ответ.';
+  if (payload.questions.some((question: any) => question.text.length < 3 && !question.imageUrl)) return 'У каждого вопроса должен быть текст или изображение.';
+  if (payload.questions.some((question: any) => question.options.length < 2)) return 'У каждого вопроса должно быть минимум 2 варианта ответа.';
+  if (payload.questions.some((question: any) => !question.options.some((option: any) => option.isCorrect))) return 'У каждого вопроса должен быть хотя бы один правильный ответ.';
   return null;
 }

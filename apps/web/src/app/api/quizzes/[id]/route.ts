@@ -40,7 +40,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           accessCode: payload.accessCode,
           categoryId: category.id,
           questions: {
-            create: payload.questions.map((question) => ({
+            create: payload.questions.map((question: any) => ({
               text: question.text,
               imageUrl: question.imageUrl || null,
               type: question.type,
