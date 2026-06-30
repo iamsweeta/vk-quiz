@@ -17,6 +17,7 @@ export function HostRoomClient() {
   const [snapshot, setSnapshot] = useState<RoomSnapshot | null>(null);
   const [connected, setConnected] = useState(false);
   const [now, setNow] = useState(Date.now());
+  const [finishClicked, setFinishClicked] = useState(false);
 
   useEffect(() => {
     const socket = getSocket();
@@ -56,6 +57,23 @@ export function HostRoomClient() {
 
   const socket = getSocket();
 
+  function finishQuiz() {
+    if (!connected) {
+      window.alert('Realtime-сервер не подключён. Проверь Render и NEXT_PUBLIC_REALTIME_URL.');
+      return;
+    }
+
+    const confirmed = window.confirm('Завершить квиз и показать финальный лидерборд?');
+    if (!confirmed) return;
+
+    setFinishClicked(true);
+    socket.emit(socketEvents.hostFinishQuiz, { code });
+
+    window.setTimeout(() => {
+      setFinishClicked(false);
+    }, 3000);
+  }
+
   return (
     <section className="mx-auto max-w-7xl px-3 py-6 sm:px-5 sm:py-10">
       <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
@@ -71,9 +89,20 @@ export function HostRoomClient() {
           <Button onClick={() => socket.emit(socketEvents.hostStartQuiz, { code })} className="min-h-12 w-full px-3 text-xs sm:w-auto sm:text-sm"><Play size={17} /> Старт</Button>
           <Button onClick={() => socket.emit(socketEvents.hostShowQuestion, { code })} variant="ghost" className="min-h-12 w-full px-3 text-xs sm:w-auto sm:text-sm"><SkipForward size={17} /> Вопрос</Button>
           <Button href={`/host/${code}/projector`} variant="ghost" className="min-h-12 w-full px-3 text-xs sm:w-auto sm:text-sm"><Maximize2 size={17} /> Экран</Button>
-          <Button onClick={() => socket.emit(socketEvents.hostFinishQuiz, { code })} variant="danger" className="min-h-12 w-full px-3 text-xs sm:w-auto sm:text-sm"><Square size={17} /> Завершить</Button>
+          <Button onClick={finishQuiz} disabled={!connected || snapshot?.status === 'FINISHED' || finishClicked} variant="danger" className="min-h-12 w-full px-3 text-xs sm:w-auto sm:text-sm"><Square size={17} /> {snapshot?.status === 'FINISHED' ? 'Завершён' : finishClicked ? 'Завершаю...' : 'Завершить'}</Button>
         </div>
       </div>
+
+      {snapshot?.status === 'FINISHED' && (
+        <Card className="mt-6 border-pink/40 bg-pink/10 text-center">
+          <Badge>Квиз завершён</Badge>
+          <h2 className="mt-3 text-3xl font-black">Финальный лидерборд готов</h2>
+          <p className="mt-2 text-[color:var(--muted)]">Участники больше не могут отвечать. Можно открыть публичный экран результатов.</p>
+          <div className="mt-5 flex justify-center">
+            <Button href={`/leaderboard/${code}`}>Открыть лидерборд</Button>
+          </div>
+        </Card>
+      )}
 
       <div className="mt-8 grid gap-4 lg:grid-cols-[1.25fr_0.75fr_0.75fr]">
         <Card>
@@ -81,7 +110,7 @@ export function HostRoomClient() {
             <div>
               <p className="text-sm font-bold text-cyan">Текущий вопрос</p>
               <h2 className="mt-2 text-4xl font-black">
-                {snapshot?.currentQuestion?.text || 'Вопрос ещё не показан'}
+                {snapshot?.status === 'FINISHED' ? 'Квиз завершён' : snapshot?.currentQuestion?.text || 'Вопрос ещё не показан'}
               </h2>
             </div>
             <div className="grid h-24 w-24 shrink-0 place-items-center rounded-[2rem] border border-cyan/30 bg-cyan/10 text-4xl font-black text-cyan">

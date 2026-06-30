@@ -195,12 +195,27 @@ function startQuestion(room: ActiveRoom, index: number) {
       questionId: question.id,
       leaderboard: leaderboard(room)
     });
+
+    const isLastQuestion = index >= room.quiz.questions.length - 1;
+
+    if (isLastQuestion) {
+      finishRoom(room);
+      return;
+    }
+
+    room.currentQuestion = undefined;
+    room.startedAt = undefined;
+    room.endsAt = undefined;
     emitState(room);
   }, question.timeLimit * 1000);
 }
 
 function finishRoom(room: ActiveRoom) {
-  if (room.timeout) clearTimeout(room.timeout);
+  if (room.timeout) {
+    clearTimeout(room.timeout);
+    room.timeout = undefined;
+  }
+
   room.status = 'FINISHED';
   room.currentQuestion = undefined;
   room.startedAt = undefined;
