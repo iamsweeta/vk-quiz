@@ -110,59 +110,52 @@ export const defaultQuizBuilderData: QuizBuilderInitialData = {
   questions: [createQuestion(0)]
 };
 
-function loadImageFromFile(file: File): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const objectUrl = URL.createObjectURL(file);
-    const image = new Image();
 
-    image.onload = () => {
-      URL.revokeObjectURL(objectUrl);
-      resolve(image);
-    };
 
-    image.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      reject(new Error('Не удалось прочитать изображение.'));
-    };
 
-    image.src = objectUrl;
-  });
+
+
+
+
+function normalizeNumber(value: number, min: number, max: number, fallback: number) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return fallback;
+  return Math.min(max, Math.max(min, Math.round(numeric)));
 }
 
-async function compressImageForUpload(file: File) {
-  if (!file.type.startsWith('image/')) return file;
 
-  const image = await loadImageFromFile(file);
+function parseImportedQuestions(raw: string, defaultTime: number): DraftQuestion[] {
+  const blocks = raw
+    .split(/\n\s*\n/g)
+    .map((block) => block.trim())
+    .filter(Boolean);
 
-  const maxSide = 1400;
-  const largestSide = Math.max(image.naturalWidth, image.naturalHeight);
-  const scale = largestSide > maxSide ? maxSide / largestSide : 1;
+  return blocks.map((block, blockIndex) => {
+    const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
+    const questionText = (lines.shift() || `Вопрос ${blockIndex + 1}`).replace(/^\d+[.)]\s*/, '');
+    const options = lines.map((line, optionIndex) => {
+      const isCorrect = /^(\*|\+|\[x\]|правильно:)/i.test(line);
+      const text = line.replace(/^(\*|\+|-|\[x\]|\[ \]|правильно:)\s*/i, '').trim() || `Вариант ${optionIndex + 1}`;
+      return {
+        clientId: uid('option'),
+        text,
+        imageUrl: '',
+        isCorrect
+      };
+    }).filter((option) => option.text);
 
-  const canvas = document.createElement('canvas');
-  canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-  canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const safeOptions = options.length >= 2 ? options : [createOption(0, true), createOption(1)];
+    if (!safeOptions.some((option) => option.isCorrect)) safeOptions[0].isCorrect = true;
 
-  const context = canvas.getContext('2d');
-
-  if (!context) return file;
-
-  context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-  const blob = await new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob(
-      (result) => {
-        if (result) resolve(result);
-        else reject(new Error('Не удалось подготовить изображение.'));
-      },
-      'image/jpeg',
-      0.78
-    );
-  });
-
-  const safeName = file.name.replace(/\.[^.]+$/, '') || 'image';
-
-  return new File([blob], `${safeName}.jpg`, {
-    type: 'image/jpeg'
+    return {
+      clientId: uid('question'),
+      text: questionText,
+      imageUrl: '',
+      answerMode: safeOptions.filter((option) => option.isCorrect).length > 1 ? 'MULTIPLE' : 'SINGLE',
+      timeLimit: normalizeNumber(defaultTime, 10, 180, 30),
+      points: 1000,
+      options: safeOptions
+    };
   });
 }
 
@@ -240,50 +233,6 @@ async function uploadImage(file: File) {
   }
 
   return String(data.url);
-}
-
-
-
-function normalizeNumber(value: number, min: number, max: number, fallback: number) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return fallback;
-  return Math.min(max, Math.max(min, Math.round(numeric)));
-}
-
-
-function parseImportedQuestions(raw: string, defaultTime: number): DraftQuestion[] {
-  const blocks = raw
-    .split(/\n\s*\n/g)
-    .map((block) => block.trim())
-    .filter(Boolean);
-
-  return blocks.map((block, blockIndex) => {
-    const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
-    const questionText = (lines.shift() || `Вопрос ${blockIndex + 1}`).replace(/^\d+[.)]\s*/, '');
-    const options = lines.map((line, optionIndex) => {
-      const isCorrect = /^(\*|\+|\[x\]|правильно:)/i.test(line);
-      const text = line.replace(/^(\*|\+|-|\[x\]|\[ \]|правильно:)\s*/i, '').trim() || `Вариант ${optionIndex + 1}`;
-      return {
-        clientId: uid('option'),
-        text,
-        imageUrl: '',
-        isCorrect
-      };
-    }).filter((option) => option.text);
-
-    const safeOptions = options.length >= 2 ? options : [createOption(0, true), createOption(1)];
-    if (!safeOptions.some((option) => option.isCorrect)) safeOptions[0].isCorrect = true;
-
-    return {
-      clientId: uid('question'),
-      text: questionText,
-      imageUrl: '',
-      answerMode: safeOptions.filter((option) => option.isCorrect).length > 1 ? 'MULTIPLE' : 'SINGLE',
-      timeLimit: normalizeNumber(defaultTime, 10, 180, 30),
-      points: 1000,
-      options: safeOptions
-    };
-  });
 }
 
 export function QuizBuilderForm({
