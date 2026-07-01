@@ -22,7 +22,7 @@ function PlayRoomContent() {
   const [message, setMessage] = useState('Ожидаем старт квиза...');
   const [now, setNow] = useState(Date.now());
   const [authChecked, setAuthChecked] = useState(false);
-  const [roleBlocked, setRoleBlocked] = useState(false);
+  const [roleBlocked, setRoleBlocked] = useState(false); const [currentUserId, setCurrentUserId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     fetch('/api/auth/me', { cache: 'no-store' })
@@ -45,7 +45,7 @@ function PlayRoomContent() {
     const socket = getSocket();
 
     function join() {
-      socket.emit(socketEvents.roomJoin, { code, nickname, role: 'PARTICIPANT' });
+      socket.emit(socketEvents.roomJoin, { code, nickname, role: 'PARTICIPANT', userId: currentUserId });
     }
 
     socket.on('connect', join);
@@ -85,7 +85,7 @@ function PlayRoomContent() {
       socket.off(socketEvents.quizFinished);
       socket.off(socketEvents.error);
     };
-  }, [authChecked, roleBlocked, code, nickname]);
+  }, [authChecked, roleBlocked, code, nickname, currentUserId]);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 500);
