@@ -110,14 +110,139 @@ export const defaultQuizBuilderData: QuizBuilderInitialData = {
   questions: [createQuestion(0)]
 };
 
+function loadImageFromFile(file: File): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(image);
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Не удалось прочитать изображение.'));
+    };
+
+    image.src = objectUrl;
+  });
+}
+
+async function compressImageForUpload(file: File) {
+  if (!file.type.startsWith('image/')) return file;
+
+  const image = await loadImageFromFile(file);
+
+  const maxSide = 1400;
+  const largestSide = Math.max(image.naturalWidth, image.naturalHeight);
+  const scale = largestSide > maxSide ? maxSide / largestSide : 1;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+  canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+
+  const context = canvas.getContext('2d');
+
+  if (!context) return file;
+
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      (result) => {
+        if (result) resolve(result);
+        else reject(new Error('Не удалось подготовить изображение.'));
+      },
+      'image/jpeg',
+      0.78
+    );
+  });
+
+  const safeName = file.name.replace(/\.[^.]+$/, '') || 'image';
+
+  return new File([blob], `${safeName}.jpg`, {
+    type: 'image/jpeg'
+  });
+}
+
+function loadImageFromFile(file: File): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(image);
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Не удалось прочитать изображение.'));
+    };
+
+    image.src = objectUrl;
+  });
+}
+
+async function compressImageForUpload(file: File) {
+  if (!file.type.startsWith('image/')) return file;
+
+  const image = await loadImageFromFile(file);
+
+  const maxSide = 1400;
+  const largestSide = Math.max(image.naturalWidth, image.naturalHeight);
+  const scale = largestSide > maxSide ? maxSide / largestSide : 1;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+  canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+
+  const context = canvas.getContext('2d');
+
+  if (!context) return file;
+
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      (result) => {
+        if (result) resolve(result);
+        else reject(new Error('Не удалось подготовить изображение.'));
+      },
+      'image/jpeg',
+      0.78
+    );
+  });
+
+  const safeName = file.name.replace(/\.[^.]+$/, '') || 'image';
+
+  return new File([blob], `${safeName}.jpg`, {
+    type: 'image/jpeg'
+  });
+}
+
 async function uploadImage(file: File) {
+  const preparedFile = await compressImageForUpload(file);
+
   const formData = new FormData();
-  formData.append('file', file);
-  const response = await fetch('/api/uploads', { method: 'POST', body: formData });
+  formData.append('file', preparedFile);
+
+  const response = await fetch('/api/uploads', {
+    method: 'POST',
+    body: formData
+  });
+
   const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(data?.message || 'Не удалось загрузить изображение.');
+
+  if (!response.ok) {
+    throw new Error(data?.message || 'Не удалось загрузить изображение.');
+  }
+
   return String(data.url);
 }
+
+
 
 function normalizeNumber(value: number, min: number, max: number, fallback: number) {
   const numeric = Number(value);
